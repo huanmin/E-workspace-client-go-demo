@@ -15,6 +15,7 @@ import (
 	netLister "k8s.io/client-go/listers/networking/v1"
 	"k8s.io/client-go/tools/cache"
 	"k8s.io/client-go/util/workqueue"
+	"log"
 	"reflect"
 	"time"
 )
@@ -53,15 +54,17 @@ func (c *Controller) enqueue(obj interface{}) {
 }
 
 func (c *Controller) deleteIngress(obj interface{}) {
+	log.Println("ingress 删除")
 	ingress := obj.(*v1.Ingress)
 	ownerReference := v12.GetControllerOf(ingress)
+	log.Println(ownerReference)
 	if ownerReference == nil {
 		return
 	}
-	if ownerReference.Kind != "Service" {
+	if ownerReference.Kind != "service" {
 		return
 	}
-	c.enqueue(ingress.Namespace + "/" + ingress.Name)
+	c.queue.Add(ingress.Namespace + "/" + ingress.Name)
 }
 
 func (c *Controller) Run(stopCh chan struct{}) {
