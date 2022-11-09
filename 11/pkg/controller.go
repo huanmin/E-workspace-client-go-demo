@@ -54,14 +54,14 @@ func (c *Controller) enqueue(obj interface{}) {
 
 func (c *Controller) deleteIngress(obj interface{}) {
 	ingress := obj.(*v1.Ingress)
-	service := v12.GetControllerOf(ingress)
-	if service == nil {
+	ownerReference := v12.GetControllerOf(ingress)
+	if ownerReference == nil {
 		return
 	}
-	if service.Kind != "Service" {
+	if ownerReference.Kind != "Service" {
 		return
 	}
-	c.queue.Add(ingress.Namespace + "/" + ingress.Name)
+	c.enqueue(ingress.Namespace + "/" + ingress.Name)
 }
 
 func (c *Controller) Run(stopCh chan struct{}) {
