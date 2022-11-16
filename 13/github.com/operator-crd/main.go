@@ -16,12 +16,12 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	clientset, err := clientset.NewForConfig(config)
+	clientSet, err := clientset.NewForConfig(config)
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	list, err := clientset.CrdV1().Foos("default").List(context.TODO(), v1.ListOptions{})
+	list, err := clientSet.CrdV1().Foos("default").List(context.TODO(), v1.ListOptions{})
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -30,7 +30,7 @@ func main() {
 		println(item.Name)
 	}
 
-	factory := externalversions.NewSharedInformerFactory(clientset, 0)
+	factory := externalversions.NewSharedInformerFactory(clientSet, 0)
 	factory.Crd().V1().Foos().Informer().AddEventHandler(cache.ResourceEventHandlerFuncs{
 		AddFunc: func(obj interface{}) {
 
