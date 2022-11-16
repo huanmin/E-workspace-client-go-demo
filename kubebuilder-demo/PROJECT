@@ -1,0 +1,16 @@
+domain: example.com
+layout:
+- go.kubebuilder.io/v3
+projectName: kubebuilder-demo
+repo: github.ocm/kubebuilder-demo
+resources:
+- api:
+    crdVersion: v1
+    namespaced: true
+  controller: true
+  domain: example.com
+  group: example.com
+  kind: App
+  path: github.ocm/kubebuilder-demo/api/v1beta1
+  version: v1beta1
+version: "3"
