@@ -41,6 +41,9 @@ type AppReconciler struct {
 	Scheme *runtime.Scheme
 }
 
+//+kubebuilder:rbac:groups=ingress.baiding.tech,resources=apps,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=apps,resources=deployments,verbs=get;list;watch;create;update;patch;delete
+//+kubebuilder:rbac:groups=networking.k8s.io,resources=ingresses,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=example.com.example.com,resources=apps,verbs=get;list;watch;create;update;patch;delete
 //+kubebuilder:rbac:groups=example.com.example.com,resources=apps/status,verbs=get;update;patch
 //+kubebuilder:rbac:groups=example.com.example.com,resources=apps/finalizers,verbs=update
@@ -119,6 +122,9 @@ func (r *AppReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.R
 				log2.Fatalln(err, "create ingress failed")
 				return ctrl.Result{}, err
 			}
+		}
+		if !errors.IsNotFound(err) && app.Spec.EnableService {
+			return ctrl.Result{}, err
 		}
 	} else {
 		if app.Spec.EnableIngress {
